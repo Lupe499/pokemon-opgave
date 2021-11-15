@@ -10,24 +10,44 @@ function App() {
   const [allPokemons, setAllPokemons] = useState([])
   const [loadMore, setLoadMore] = useState('https://pokeapi.co/api/v2/pokemon/?limit=20')
   const getAllPokemons = async () => {
-    const res = await axios(loadMore).catch(err => alert(err))
-    const data = await res.data
-    console.log(data);
-    setLoadMore(data.next)
 
+    
+    try{
+      const res = await axios(loadMore)
+      const data = await res.data
+      makePokemonCard(data.results)
+      console.log(data);
+      setLoadMore(data.next)
+      
+    }catch(err){
+      console.log(err)
+ 
+      document.querySelector(".App").innerHTML = "someting went wrong please try again later"
+      document.querySelector(".App").style.color = "white"
+    }
+    
+    
+    
     function makePokemonCard (result) {
       console.log(result);
       result.forEach( async (pokemon) => {
-        const res = await axios(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`).catch(err => alert(err))
-        const data = await res.data
+        
+        try{
+          const res = await axios(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+          const data = await res.data
+          setAllPokemons(currentList => [...currentList, data])
+          
+        }catch(err){
+          console.log(err);
+          document.querySelector(".App").innerHTML = "someting went wrong please try again later"
+          document.querySelector(".App").style.color = "white"
+        }
 
-        setAllPokemons(currentList => [...currentList, data])
 
       })
     }
-    makePokemonCard(data.results)
     await console.log(allPokemons)
-   
+
   }
   
   
