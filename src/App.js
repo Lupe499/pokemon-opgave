@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import Button from '@mui/material/Button';
 import PokemonCard from './components/PokemonCard';
@@ -20,7 +19,6 @@ function App() {
   
   const {allPokemons, loading, error} = usePokemonList({limit, offset})
 
-  console.log(allPokemons);
 
   const handleChange = (event) => {
     setLimit(event.target.value);
