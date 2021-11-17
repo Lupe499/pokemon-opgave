@@ -9,28 +9,26 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { CircularProgress, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import usePokemonList from './hooks/usePokemonList';
 
 function App() {
-
-  const [allPokemons, setAllPokemons] = useState([])
 
   const [offset, setOffset] = useState(0)
   const [limit, setLimit] = useState(20)
 
-  const [loading, setLoading] = useState(true)
-  const [errorMsg, setErrorMsg] = useState("")
+  
+  
+  const {allPokemons, loading, error} = usePokemonList({limit, offset})
 
+  console.log(allPokemons);
 
   const handleChange = (event) => {
     setLimit(event.target.value);
   };
 
   
-  // Move makePokemonCard to PokemonCard and as custom hook (usePokemon)
   
-  // handle next and back functions
-  
-  
+
   function handleNext() {
     setOffset(offset + limit)
   }
@@ -40,31 +38,6 @@ function App() {
     }
   }
   
-  
-  useEffect(() => {
-    const getAllPokemons = async () => {
-      
-      
-      try{
-        setLoading(true)
-        const {data} = await axios(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
-        console.log(offset);
-        setAllPokemons(data.results)
-        setLoading(false)
-        
-      }catch(err){
-        console.error(err)
-        setErrorMsg(err?.res?.data?.message?? err.message)
-        
-      }
-      
-    }  
-    getAllPokemons()
-  }, [limit, offset])
-
-
-
-    
     return (
      
 
@@ -72,7 +45,7 @@ function App() {
         <div className="App">
           {
             loading ? <CircularProgress size={20} />: 
-            errorMsg.length > 0 ? <Typography>{errorMsg}</Typography>:
+            error.length > 0 ? <Typography>{error}</Typography>:
 
             allPokemons.map((pokemon, index) => {
               
